@@ -164,7 +164,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     (parseFloat(principalText) * (parseFloat(interestRateText) * 0.95)) / 12;
   const interestRateInput = parseFloat(principalText) / 12 + interest;
 
-  console.log('interestRateInput', interestRateInput.toFixed(0));
+  // console.log('interestRateInput', interestRateInput.toFixed(0));
 
   return (
     <Container>
