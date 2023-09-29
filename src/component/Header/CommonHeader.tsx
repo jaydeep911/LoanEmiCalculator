@@ -58,6 +58,7 @@ const CommonHeader = ({onPress, text, backArrow, AddPayment}: HeaderProps) => {
           </View>
         )}
       </View>
+      <SafeAreaView />
     </View>
   );
 };

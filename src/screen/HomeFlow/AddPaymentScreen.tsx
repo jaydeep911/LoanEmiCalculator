@@ -232,7 +232,7 @@ const AddPaymentScreen = ({
               AsyncStorage.setItem(
                 'user',
                 amountText,
-                moment(selectedDate).format('MMM/YYYY'),
+                // moment(selectedDate).format('MMM/YYYY'),
               );
 
               navigation.navigate('HomeScreen', {

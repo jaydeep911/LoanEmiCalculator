@@ -21,7 +21,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'DemoProject' do
+target 'LoanEmi' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -43,7 +43,7 @@ target 'DemoProject' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'DemoProjectTests' do
+  target 'LoanEmiTests' do
     inherit! :complete
     # Pods for testing
   end

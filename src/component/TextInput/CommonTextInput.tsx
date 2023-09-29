@@ -25,7 +25,7 @@ const CommonTextInput = ({
     <View>
       <Text
         style={{
-          marginBottom: 10,
+          // marginBottom: 10,
           marginTop: 15,
           fontSize: 14,
           color: '#5F7C9D',
@@ -50,32 +50,21 @@ const CommonTextInput = ({
 
 const styles = StyleSheet.create({
   inputView: {
-    marginTop: 20,
-    width: '100%',
+    height: 40,
     backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    marginBottom: 10,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginRight: 10,
     shadowColor: '#000',
-    borderBottomWidth: 0.8,
-    // borderWidth: 1,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 0.1,
-    // },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 1,
-    // elevation: 2,
+    // borderBottomWidth: 0.3,
+    borderWidth: 0.3,
+    borderRadius: 10,
+    borderColor: 'black',
+    marginTop: 10,
   },
   textInput: {
-    height: 50,
-    marginLeft: 10,
-    flex: 1,
+    marginLeft: 6,
     color: 'black',
   },
-
   icon: {marginRight: 30},
 });
 
