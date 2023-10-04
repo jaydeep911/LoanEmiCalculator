@@ -149,9 +149,9 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
           <Button
             text="LONE DETAILS"
             backArrow
-            // onPress={() => {
-            //   navigation.navigate('');
-            // }}
+            onPress={() => {
+              navigation.navigate('PaymentListScreen');
+            }}
           />
         </ButtonView>
       </Subcontainer>

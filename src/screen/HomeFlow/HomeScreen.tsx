@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, Pressable, StatusBar, Alert, Platform, View} from 'react-native';
+import {Pressable, StatusBar, View, ScrollView} from 'react-native';
 import CommonHeader from '../../component/Header/CommonHeader';
 import {styled} from 'styled-components';
 import CommonTextInput from '../../component/TextInput/CommonTextInput';
@@ -20,7 +20,6 @@ const Container = styled.View({
 });
 const Subcontainer = styled.View({
   flex: 1,
-  // padding: 10,
 });
 
 const CardView = styled.View({
@@ -39,7 +38,7 @@ const CardView = styled.View({
 });
 const CardText = styled.View({
   marginHorizontal: 15,
-  // marginVertical: 10,
+
   marginBottom: 20,
 });
 const ButtonView = styled.View({
@@ -133,7 +132,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     setInterestRateText(text);
   };
   const TenureInputHandler = (text: string) => {
-    setTenure(text);
+    setTenure((text = 10));
   };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -180,132 +179,148 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           navigation.navigate('AddPaymentScreen');
         }}
       />
-      <Subcontainer>
-        <CardView>
-          <CardText>
-            <CommonTextInput
-              text="Principal"
-              onChangeText={PrincipalInputHandler}
-              value={principalText}
-              editable={true}
-              multiline={false}
-              keyboardType="numeric"
-            />
-            <CommonTextInput
-              text="Interest Rate In %"
-              onChangeText={InterestChangeHandler}
-              value={interestRateText}
-              editable={true}
-              multiline={false}
-              keyboardType="numeric"
-            />
-            <CommonTextInput
-              text="Tenure"
-              onChangeText={TenureInputHandler}
-              value={tenure}
-              editable={true}
-              multiline={false}
-              keyboardType="numeric"
-            />
-
-            <DateContainer>
-              <View>
-                <TitleText>Paying Term</TitleText>
-                <RadioContainer>
-                  <Pressable
-                    onPress={() => {
-                      setMonth(true);
-                      setYear(false);
-                    }}>
-                    <MainContainer>
-                      <Fontisto
-                        name={
-                          month === true
-                            ? 'radio-btn-active'
-                            : 'radio-btn-passive'
-                        }
-                        size={20}
-                        color={month === true ? 'darkcyan' : '#5F7C9D'}
-                        style={{marginHorizontal: 8}}
-                      />
-                      <SubText>Month</SubText>
-                    </MainContainer>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => {
-                      setYear(true);
-                      setMonth(false);
-                    }}>
-                    <MainContainer>
-                      <Fontisto
-                        name={
-                          year === true
-                            ? 'radio-btn-active'
-                            : 'radio-btn-passive'
-                        }
-                        size={20}
-                        color={year === true ? 'darkcyan' : '#5F7C9D'}
-                        style={{marginHorizontal: 8}}
-                      />
-                      <SubText>Year</SubText>
-                    </MainContainer>
-                  </Pressable>
-                </RadioContainer>
-              </View>
-              <DatePickerView>
-                <TitleText>Starting From</TitleText>
-                <DatePicker onPress={showDatePicker}>
-                  <CalendarText>
-                    {selectedDate
-                      ? moment(selectedDate).format('MMM/YYYY')
-                      : 'MM/YYYY'}
-                  </CalendarText>
-                  <CalendarIcon
-                    name="calendar-range-outline"
-                    size={22}
-                    color={'black'}
-                  />
-                </DatePicker>
-              </DatePickerView>
-            </DateContainer>
-          </CardText>
-        </CardView>
-        {PaymentData && (
-          <SubView>
-            <PaymentView>
-              <PaymentType>Monthly Payment</PaymentType>
-              <Icon
-                name="delete"
-                size={30}
-                color={'white'}
-                style={{marginRight: 20}}
+      <ScrollView>
+        <Subcontainer>
+          <CardView>
+            <CardText>
+              <CommonTextInput
+                text="Principal"
+                onChangeText={PrincipalInputHandler}
+                value={principalText}
+                editable={true}
+                multiline={false}
+                keyboardType="numeric"
               />
-            </PaymentView>
-            <PaymentText>
-              {/* {PaymentData + '  from' + moment(selectedDate).format('MMM/YYYY')} */}
-            </PaymentText>
-          </SubView>
-        )}
-      </Subcontainer>
+              <CommonTextInput
+                text="Interest Rate In %"
+                onChangeText={InterestChangeHandler}
+                value={interestRateText}
+                editable={true}
+                multiline={false}
+                keyboardType="numeric"
+              />
+
+              <DateContainer>
+                <View>
+                  <TitleText>Paying Term</TitleText>
+                  <RadioContainer>
+                    <Pressable
+                      onPress={() => {
+                        setMonth(true);
+                        setYear(false);
+                      }}>
+                      <MainContainer>
+                        <Fontisto
+                          name={
+                            month === true
+                              ? 'radio-btn-active'
+                              : 'radio-btn-passive'
+                          }
+                          size={20}
+                          color={month === true ? 'darkcyan' : '#5F7C9D'}
+                          style={{marginHorizontal: 8}}
+                        />
+                        <SubText>Month</SubText>
+                      </MainContainer>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        setYear(true);
+                        setMonth(false);
+                      }}>
+                      <MainContainer>
+                        <Fontisto
+                          name={
+                            year === true
+                              ? 'radio-btn-active'
+                              : 'radio-btn-passive'
+                          }
+                          size={20}
+                          color={year === true ? 'darkcyan' : '#5F7C9D'}
+                          style={{marginHorizontal: 8}}
+                        />
+                        <SubText>Year</SubText>
+                      </MainContainer>
+                    </Pressable>
+                  </RadioContainer>
+                </View>
+                <DatePickerView>
+                  <TitleText>Starting From</TitleText>
+                  <DatePicker onPress={showDatePicker}>
+                    <CalendarText>
+                      {selectedDate
+                        ? moment(selectedDate).format('MMM/YYYY')
+                        : 'MM/YYYY'}
+                    </CalendarText>
+                    <CalendarIcon
+                      name="calendar-range-outline"
+                      size={22}
+                      color={'black'}
+                    />
+                  </DatePicker>
+                </DatePickerView>
+              </DateContainer>
+              {year === true && (
+                <CommonTextInput
+                  text={'Loan Tenure in Years'}
+                  onChangeText={TenureInputHandler}
+                  value={tenure}
+                  editable={true}
+                  multiline={false}
+                  keyboardType="numeric"
+                  maxLength={3}
+                />
+              )}
+
+              {month === true && (
+                <CommonTextInput
+                  text={'Loan Tenure in Months'}
+                  onChangeText={TenureInputHandler}
+                  value={tenure}
+                  editable={true}
+                  multiline={false}
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+              )}
+            </CardText>
+          </CardView>
+          {PaymentData && (
+            <SubView>
+              <PaymentView>
+                <PaymentType>Monthly Payment</PaymentType>
+                <Icon
+                  name="delete"
+                  size={30}
+                  color={'white'}
+                  style={{marginRight: 20}}
+                />
+              </PaymentView>
+              <PaymentText>
+                {/* {PaymentData + '  from' + moment(selectedDate).format('MMM/YYYY')} */}
+              </PaymentText>
+            </SubView>
+          )}
+        </Subcontainer>
+      </ScrollView>
       <ButtonView>
         <Button
           text="CALCULATE"
           backArrow
           onPress={() => {
-            // if (
-            //   principalText &&
-            //   interestRateText &&
-            //   tenure &&
-            //   selectedDate == ''
-            // ) {
-            // navigation.navigate('PaymentDetailScreen', {
-            //     principal: principalText,
-            //     interestRate: interestRateInput,
-            //     tenure: tenure,
-            //     emi: emi,
-            //   });
-            // }
-            navigation.navigate('DataListScreen');
+            if (
+              principalText &&
+              interestRateText &&
+              tenure &&
+              selectedDate !== ''
+            ) {
+              navigation.navigate('PaymentDetailScreen', {
+                principal: principalText,
+                interestRate: interestRateInput,
+                tenure: tenure,
+                emi: emi,
+              });
+            }
           }}
         />
       </ButtonView>

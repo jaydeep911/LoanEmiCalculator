@@ -10,6 +10,7 @@ type CommonTextInputProps = {
   text: string;
   editable: boolean;
   multiline: boolean;
+  maxLength: number;
 };
 
 const CommonTextInput = ({
@@ -18,8 +19,8 @@ const CommonTextInput = ({
   value,
   keyboardType,
   text,
-  editable,
   multiline,
+  maxLength,
 }: CommonTextInputProps) => {
   return (
     <View>
@@ -42,6 +43,7 @@ const CommonTextInput = ({
           value={value}
           keyboardType={keyboardType}
           multiline={multiline}
+          maxLength={maxLength}
         />
       </View>
     </View>
@@ -64,6 +66,8 @@ const styles = StyleSheet.create({
   textInput: {
     marginLeft: 6,
     color: 'black',
+    width: '100%',
+    height: '100%',
   },
   icon: {marginRight: 30},
 });

@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './HomeScreen';
 import AddPaymentScreen from './AddPaymentScreen';
 import PaymentDetailScreen from './PaymentDetailScreen';
-import DataListScreen from './DataListScreen';
+import PaymentListScreen from './PaymentListScreen';
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {
@@ -25,8 +25,8 @@ const HomeStack = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="DataListScreen"
-        component={DataListScreen}
+        name="PaymentListScreen"
+        component={PaymentListScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

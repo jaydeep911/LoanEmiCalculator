@@ -16,8 +16,7 @@ const TabStack = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: Colors.tabActive,
         tabBarInactiveTintColor: Colors.tabInActive,
-        // tabBarInactiveBackgroundColor: Colors.tabInActiveBg,
-        // tabBarActiveBackgroundColor: Colors.tabActiveBg
+        tabBarLabelStyle: {marginBottom: 10},
       }}>
       <Tab.Screen
         name="Home"
@@ -48,7 +47,6 @@ const TabStack = () => {
         component={ProfileStack}
         options={{
           headerShown: false,
-
           tabBarShowLabel: true,
           tabBarIcon: tabInfo => (
             <MaterialCommunityIcons

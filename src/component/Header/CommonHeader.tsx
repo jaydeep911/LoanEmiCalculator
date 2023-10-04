@@ -25,27 +25,24 @@ const CommonHeader = ({onPress, text, backArrow, AddPayment}: HeaderProps) => {
       <SafeAreaView style={styles.safeAreaColor} />
 
       <StatusBar
-        // translucent
         backgroundColor="darkcyan"
         // barStyle={Platform.OS === 'ios' ? 'light-content' : 'dark-content'}
         barStyle="light-content"
       />
 
       <View style={[styles.iconView]}>
-        {backArrow && (
-          // <View>
-          <Icon
-            name="arrow-back"
-            size={30}
-            color={'white'}
-            onPress={onPress}
-            // style={{marginLeft: 10}}
-          />
-          // </View>
-        )}
-        {/* <View style={{}}> */}
-        <Text style={styles.headerText}>{text}</Text>
-        {/* </View> */}
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {backArrow && (
+            <Icon
+              name="arrow-back"
+              size={30}
+              color={'white'}
+              onPress={onPress}
+            />
+          )}
+
+          <Text style={styles.headerText}>{text}</Text>
+        </View>
         {AddPayment && (
           <View>
             <Icon
@@ -53,11 +50,11 @@ const CommonHeader = ({onPress, text, backArrow, AddPayment}: HeaderProps) => {
               size={30}
               color={'white'}
               onPress={onPress}
-              style={{paddingLeft: Platform.OS === 'ios' ? 180 : 140}}
             />
           </View>
         )}
       </View>
+
       <SafeAreaView />
     </View>
   );
@@ -69,15 +66,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 12,
     textAlign: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'space-between',
   },
   iconView: {
     flexDirection: 'row',
     minHeight: 50,
     alignItems: 'center',
     paddingHorizontal: 10,
+    justifyContent: 'space-between',
   },
 
   mainHeaderView: {
