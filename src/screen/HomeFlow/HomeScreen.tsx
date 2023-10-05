@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, StatusBar, View, ScrollView} from 'react-native';
+import {Pressable, StatusBar, View, ScrollView, Alert} from 'react-native';
 import CommonHeader from '../../component/Header/CommonHeader';
 import {styled} from 'styled-components';
 import CommonTextInput from '../../component/TextInput/CommonTextInput';
@@ -132,7 +132,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     setInterestRateText(text);
   };
   const TenureInputHandler = (text: string) => {
-    setTenure((text = 10));
+    setTenure(text.replace(/[^1-50]/g, ''));
   };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -146,6 +146,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     setSelectedDate(date);
     hideDatePicker();
   };
+  // const emiValue = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 
   const monthlyInterestRate = parseFloat(interestRateText) / (12 * 100); // Convert annual interest rate to monthly
   const totalMonths = parseFloat(tenure) * 12; // Convert tenure from years to months
@@ -158,10 +159,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
       Math.pow(1 + monthlyInterestRate, totalMonths)) /
     (Math.pow(1 + monthlyInterestRate, totalMonths) - 1);
 
-  // console.log('emi===>', emi.toFixed(0));
-  // Interest = P x R x N /100 principal interestrate yesr
-
-  // const interestRateInput = (principalText * 12 * interestRateText) / 100;.
+  // console.log('emi===>', emi.toFixed(2));
 
   const interest =
     (parseFloat(principalText) * (parseFloat(interestRateText) * 0.95)) / 12;
@@ -190,6 +188,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 editable={true}
                 multiline={false}
                 keyboardType="numeric"
+                maxLength={10}
               />
               <CommonTextInput
                 text="Interest Rate In %"
@@ -198,6 +197,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 editable={true}
                 multiline={false}
                 keyboardType="numeric"
+                maxLength={10}
               />
 
               <DateContainer>
@@ -311,7 +311,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
             if (
               principalText &&
               interestRateText &&
-              tenure &&
+              tenure.replace(/[^1-50]/g, '') &&
               selectedDate !== ''
             ) {
               navigation.navigate('PaymentDetailScreen', {
@@ -320,6 +320,8 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 tenure: tenure,
                 emi: emi,
               });
+            } else {
+              Alert.alert('enter detail');
             }
           }}
         />

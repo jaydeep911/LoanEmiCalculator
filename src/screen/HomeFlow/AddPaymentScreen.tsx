@@ -147,6 +147,7 @@ const AddPaymentScreen = ({
               editable={true}
               multiline={false}
               keyboardType="numeric"
+              maxLength={10}
             />
             <TitleText>Starting From</TitleText>
             <DatePicker onPress={showDatePicker}>
