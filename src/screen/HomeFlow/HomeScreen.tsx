@@ -106,12 +106,12 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [principalText, setPrincipalText] = useState('');
   const [interestRateText, setInterestRateText] = useState('');
   const [tenure, setTenure] = useState('');
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState();
   const [selectedDate, setSelectedDate] = useState('');
   const [month, setMonth] = useState(false);
-  const [year, setYear] = useState(false);
+  const [year, setYear] = useState(true);
   const [PaymentData, setPaymentData] = useState([]);
-  const [amount, setAmount] = useState();
+  const [monthtenure, setMonthTenure] = useState('');
 
   useEffect(() => {
     displayData();
@@ -262,7 +262,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                   </DatePicker>
                 </DatePickerView>
               </DateContainer>
-              {year === true && (
+              {year && (
                 <CommonTextInput
                   text={'Loan Tenure in Years'}
                   onChangeText={TenureInputHandler}
@@ -274,7 +274,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 />
               )}
 
-              {month === true && (
+              {month && (
                 <CommonTextInput
                   text={'Loan Tenure in Months'}
                   onChangeText={TenureInputHandler}
@@ -333,6 +333,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+        display="spinner"
       />
     </Container>
   );
