@@ -111,7 +111,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [month, setMonth] = useState(false);
   const [year, setYear] = useState(false);
   const [PaymentData, setPaymentData] = useState([]);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState();
 
   useEffect(() => {
     displayData();
@@ -146,12 +146,10 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     setSelectedDate(date);
     hideDatePicker();
   };
-  // const emiValue = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 
   const monthlyInterestRate = parseFloat(interestRateText) / (12 * 100); // Convert annual interest rate to monthly
   const totalMonths = parseFloat(tenure) * 12; // Convert tenure from years to months
   let loanAmount = principalText;
-  // console.log('totalMonth', totalMonths);
 
   const emi =
     (parseFloat(loanAmount) *
@@ -162,11 +160,15 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   // console.log('emi===>', emi.toFixed(2));
 
   const interest =
-    (parseFloat(principalText) * (parseFloat(interestRateText) * 0.95)) / 12;
+    (parseFloat(principalText) * (parseFloat(interestRateText) * 0.6)) / 12;
   const interestRateInput = parseFloat(principalText) / 12 + interest;
 
-  // console.log('interestRateInput', interestRateInput.toFixed(0));
-
+  // if () {
+  //   const rate = parseFloat(interestRateText) / 12 / 180;
+  //   const p = parseFloat(principalText);
+  //   const n = parseFloat(tenure);
+  //   const interestValue = p * rate * n;
+  // }
   return (
     <Container>
       <StatusBar barStyle="light-content" />
@@ -311,7 +313,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
             if (
               principalText &&
               interestRateText &&
-              tenure.replace(/[^1-50]/g, '') &&
+              tenure &&
               selectedDate !== ''
             ) {
               navigation.navigate('PaymentDetailScreen', {
