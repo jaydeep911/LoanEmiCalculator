@@ -11,11 +11,11 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
-  calculateEMI,
   calculateHomeLoanEMI,
   calculateLoanReport,
 } from '../../helper/HelpUtilAI';
 
+import {useFocusEffect} from '@react-navigation/native';
 type HomeProps = {
   navigation: any;
   route: any;
@@ -91,15 +91,17 @@ const SubText = styled.Text({
 });
 const PaymentView = styled.View({
   backgroundColor: 'gray',
-  height: 30,
+  height: 35,
   flexDirection: 'row',
   justifyContent: 'space-between',
+  alignItem: 'center',
 });
 const PaymentType = styled.Text({
   color: 'white',
   fontSize: 18,
   alignItem: 'center',
   marginHorizontal: 10,
+  marginTop: 4,
 });
 const PaymentText = styled.Text({
   color: 'gray',
@@ -111,23 +113,26 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [principalText, setPrincipalText] = useState('');
   const [interestRateText, setInterestRateText] = useState('');
   const [tenure, setTenure] = useState('');
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState();
   const [selectedDate, setSelectedDate] = useState('');
   const [month, setMonth] = useState(false);
-  const [year, setYear] = useState(false);
+  const [year, setYear] = useState(true);
   const [PaymentData, setPaymentData] = useState([]);
-  const [amount, setAmount] = useState();
 
-  useEffect(() => {
-    displayData();
-  }, []);
+  // useEffect(() => {
+  //   displayData();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      displayData();
+    }, []),
+  );
   const displayData = async (amount: any) => {
     try {
       const amount = await AsyncStorage.getItem('user');
       setPaymentData(amount);
-    } catch (error) {
-      // alert(error);
-    }
+    } catch (error) {}
   };
 
   const PrincipalInputHandler = (text: string) => {
@@ -135,6 +140,12 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   };
   const InterestChangeHandler = (text: string) => {
     setInterestRateText(text);
+  };
+  const validateInterestRate = (text: any) => {
+    return text.length > 0 && text.length < 50;
+  };
+  const validateTenure = (text: string) => {
+    return text.length > 0 && text.length < 50;
   };
   const TenureInputHandler = (text: string) => {
     setTenure(text.replace(/[^1-50]/g, ''));
@@ -278,6 +289,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
       }`,
     );
   };
+  const onAddChangeHandler = () => {};
   return (
     <Container>
       <StatusBar barStyle="light-content" />
@@ -308,7 +320,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 editable={true}
                 multiline={false}
                 keyboardType="numeric"
-                maxLength={10}
+                maxLength={2}
               />
 
               <DateContainer>
@@ -371,7 +383,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                   </DatePicker>
                 </DatePickerView>
               </DateContainer>
-              {year === true && (
+              {year && (
                 <CommonTextInput
                   text={'Loan Tenure in Years'}
                   onChangeText={TenureInputHandler}
@@ -383,7 +395,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 />
               )}
 
-              {month === true && (
+              {month && (
                 <CommonTextInput
                   text={'Loan Tenure in Months'}
                   onChangeText={TenureInputHandler}
@@ -399,17 +411,18 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           {PaymentData && (
             <SubView>
               <PaymentView>
-                <PaymentType>Monthly Payment</PaymentType>
+                <PaymentType>{'Payment Type'}</PaymentType>
                 <Icon
                   name="delete"
                   size={30}
                   color={'white'}
                   style={{marginRight: 20}}
+                  onPress={() => {
+                    setPaymentData(false);
+                  }}
                 />
               </PaymentView>
-              <PaymentText>
-                {/* {PaymentData + '  from' + moment(selectedDate).format('MMM/YYYY')} */}
-              </PaymentText>
+              <PaymentText>{PaymentData}</PaymentText>
             </SubView>
           )}
         </Subcontainer>
@@ -419,46 +432,26 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           text="CALCULATE"
           backArrow
           onPress={() => {
-            // if (
-            //   principalText &&
-            //   interestRateText &&
-            //   tenure &&
-            //   selectedDate !== ''
-            // ) {
-            //   navigation.navigate('PaymentDetailScreen', {
-            //     principal: principalText,
-            //     interestRate: interestRateInput,
-            //     tenure: tenure,
-            //     emi: emi,
-            //   });
-            // } else {
-            //   Alert.alert('enter detail');
-            // }
-            // Example usage:
-            // const loanPrincipal = 100000; // Replace with the loan principal amount
-            // const annualInterestRate = 6.5; // Replace with the annual interest rate
-            // const loanTermMonths = 36; // Replace with the loan term in months
-            // const loanStartDate = '2023-01-01'; // Replace with the loan starting date in YYYY-MM-DD format
-            // const emiDetails = calculateEMI(
-            //   loanPrincipal,
-            //   annualInterestRate,
-            //   loanTermMonths,
-            //   loanStartDate,
-            // );
-            // console.log('EMI: ₹' + emiDetails.emi);
-            // console.log('Total Payment: ₹' + emiDetails.totalPayment);
-            // console.log('Loan Start Date: ' + emiDetails.startDate);
-            // console.log('Loan End Date: ' + emiDetails.endDate);
-            // let value = calculateLoanSchedule(
-            //   loanPrincipal,
-            //   annualInterestRate,
-            //   loanTermMonths,
-            //   'monthly',
-            //   1000,
-            //   new Date(),
-            //   [],
-            // );
-            // console.log('VALUE ' + JSON.stringify(value));
+            if (principalText === '') {
+              Alert.alert('enter principal ');
+            } else if (interestRateText === '') {
+              Alert.alert('enter interest rate');
+            } else if (tenure === '') {
+              Alert.alert('enter tenure ');
+            } else if (selectedDate === '') {
+              Alert.alert('SelectedDate');
+            } else if (!validateInterestRate(interestRateText)) {
+              Alert.alert('Please enter interestRate 1 to 50 number');
+            } else if (!validateTenure(tenure)) {
+              Alert.alert('Please enter tenure 1 to 50 number');
+            } else {
+              navigation.navigate('PaymentDetailScreen', {
+                principal: principalText,
+                interestRate: interestRateInput,
+                tenure: tenure,
+                emi: emi,
+              });
+            }
             calculation();
           }}
         />
@@ -468,6 +461,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+        display="spinner"
       />
     </Container>
   );
