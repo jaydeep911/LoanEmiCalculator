@@ -24,6 +24,11 @@ const TabStack = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: true,
+
+          //new added for android
+          tabBarLabelStyle: {},
+          tabBarStyle: {minHeight: 60, paddingBottom: 5},
+          //end
           tabBarIcon: tabInfo => (
             <Icons name="home" size={25} color={tabInfo.color} />
           ),
@@ -35,6 +40,9 @@ const TabStack = () => {
         component={ServiceStack}
         options={{
           headerShown: false,
+          tabBarStyle: {minHeight: 60, paddingBottom: 5},
+          tabBarLabelStyle: {},
+
           tabBarShowLabel: true,
           tabBarIcon: tabInfo => (
             <Icons name="cog" size={25} color={tabInfo.color} />
@@ -48,6 +56,9 @@ const TabStack = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: true,
+          tabBarStyle: {minHeight: 60, paddingBottom: 5},
+          tabBarLabelStyle: {},
+
           tabBarIcon: tabInfo => (
             <MaterialCommunityIcons
               name="account-cog-outline"

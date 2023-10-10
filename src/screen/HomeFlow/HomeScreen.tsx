@@ -10,6 +10,11 @@ import CalendarIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  calculateEMI,
+  calculateHomeLoanEMI,
+  calculateLoanReport,
+} from '../../helper/HelpUtilAI';
 
 type HomeProps = {
   navigation: any;
@@ -169,6 +174,110 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   //   const n = parseFloat(tenure);
   //   const interestValue = p * rate * n;
   // }
+
+  const calculation = () => {
+    // Example usage:
+    const loanAmount = 1000000; // 10 lakhs
+    const annualInterestRate = 8; // 8% per annum
+    const loanTenureMonths = 240; // 20 years loan tenure in months
+    const monthlyEMI = calculateHomeLoanEMI(
+      loanAmount,
+      annualInterestRate,
+      loanTenureMonths / 12,
+    );
+
+    const partPayments = [
+      {
+        amount: 50000,
+        startDate: '2023-01-01',
+        endDate: '2023-12-31',
+        interval: 'OneTime',
+      },
+      {
+        amount: 30000,
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        interval: 'Yearly',
+      },
+      {
+        amount: 20000,
+        startDate: '2023-02-01',
+        endDate: '2023-02-28',
+        interval: 'OneTime',
+      },
+    ];
+    const partPayments_monthly = [
+      {
+        amount: 1000,
+        startDate: '2023-01-01',
+        endDate: '2123-12-31',
+        interval: 'Monthly',
+      },
+    ];
+    const partPayments_yearly = [
+      {
+        amount: 1000,
+        startDate: '2023-01-01',
+        endDate: '2123-12-31',
+        interval: 'Yearly',
+      },
+    ];
+    const partPayments_Quarterly = [
+      {
+        amount: 1000,
+        startDate: '2023-01-01',
+        endDate: '2123-12-31',
+        interval: 'Quarterly',
+      },
+    ];
+
+    const loanStartDate = '2023-01-01'; // Start date of the loan
+
+    const {
+      amortizationSchedule,
+      loanEndDate,
+      calculatedPrinciple,
+      calculatedInterest,
+      calculatedPartPayment,
+    } = calculateLoanReport(
+      loanAmount,
+      annualInterestRate,
+      monthlyEMI,
+      loanTenureMonths,
+      partPayments_Quarterly,
+      loanStartDate,
+    );
+
+    // Display the full monthly report
+    console.log(
+      'Month\tPayment Date\tMonthly EMI\tPrincipal Payment\tInterest Payment\tRemaining Loan Amount\tPart Payment',
+    );
+
+    amortizationSchedule.forEach(entry => {
+      console.log(
+        `${entry.month}\t${
+          entry.paymentDate.toISOString().split('T')[0]
+        }\t₹${entry.monthlyEMI.toFixed(2)}\t\t₹${entry.principalPayment.toFixed(
+          2,
+        )}\t\t₹${entry.interestPayment.toFixed(
+          2,
+        )}\t₹${entry.remainingLoanAmount.toFixed(
+          2,
+        )}\t₹${entry.partPaymentOfMonth.toFixed(2)}
+        `,
+      );
+    });
+
+    console.log(`Loan End Date: ${loanEndDate.toISOString().split('T')[0]}`);
+    console.log(`calculatedPrinciple : ${calculatedPrinciple}`);
+    console.log(`calculatedInterest : ${calculatedInterest}`);
+    console.log(`calculatedPartPayment : ${calculatedPartPayment}`);
+    console.log(
+      `Total Payment : ${
+        calculatedPrinciple + calculatedInterest + calculatedPartPayment
+      }`,
+    );
+  };
   return (
     <Container>
       <StatusBar barStyle="light-content" />
@@ -310,21 +419,47 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           text="CALCULATE"
           backArrow
           onPress={() => {
-            if (
-              principalText &&
-              interestRateText &&
-              tenure &&
-              selectedDate !== ''
-            ) {
-              navigation.navigate('PaymentDetailScreen', {
-                principal: principalText,
-                interestRate: interestRateInput,
-                tenure: tenure,
-                emi: emi,
-              });
-            } else {
-              Alert.alert('enter detail');
-            }
+            // if (
+            //   principalText &&
+            //   interestRateText &&
+            //   tenure &&
+            //   selectedDate !== ''
+            // ) {
+            //   navigation.navigate('PaymentDetailScreen', {
+            //     principal: principalText,
+            //     interestRate: interestRateInput,
+            //     tenure: tenure,
+            //     emi: emi,
+            //   });
+            // } else {
+            //   Alert.alert('enter detail');
+            // }
+            // Example usage:
+            // const loanPrincipal = 100000; // Replace with the loan principal amount
+            // const annualInterestRate = 6.5; // Replace with the annual interest rate
+            // const loanTermMonths = 36; // Replace with the loan term in months
+            // const loanStartDate = '2023-01-01'; // Replace with the loan starting date in YYYY-MM-DD format
+            // const emiDetails = calculateEMI(
+            //   loanPrincipal,
+            //   annualInterestRate,
+            //   loanTermMonths,
+            //   loanStartDate,
+            // );
+            // console.log('EMI: ₹' + emiDetails.emi);
+            // console.log('Total Payment: ₹' + emiDetails.totalPayment);
+            // console.log('Loan Start Date: ' + emiDetails.startDate);
+            // console.log('Loan End Date: ' + emiDetails.endDate);
+            // let value = calculateLoanSchedule(
+            //   loanPrincipal,
+            //   annualInterestRate,
+            //   loanTermMonths,
+            //   'monthly',
+            //   1000,
+            //   new Date(),
+            //   [],
+            // );
+            // console.log('VALUE ' + JSON.stringify(value));
+            calculation();
           }}
         />
       </ButtonView>
