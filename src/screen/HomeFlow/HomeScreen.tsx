@@ -10,7 +10,7 @@ import CalendarIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import {useFocusEffect} from '@react-navigation/native';
 type HomeProps = {
   navigation: any;
   route: any;
@@ -86,15 +86,17 @@ const SubText = styled.Text({
 });
 const PaymentView = styled.View({
   backgroundColor: 'gray',
-  height: 30,
+  height: 35,
   flexDirection: 'row',
   justifyContent: 'space-between',
+  alignItem: 'center',
 });
 const PaymentType = styled.Text({
   color: 'white',
   fontSize: 18,
   alignItem: 'center',
   marginHorizontal: 10,
+  marginTop: 4,
 });
 const PaymentText = styled.Text({
   color: 'gray',
@@ -111,18 +113,21 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [month, setMonth] = useState(false);
   const [year, setYear] = useState(true);
   const [PaymentData, setPaymentData] = useState([]);
-  const [monthtenure, setMonthTenure] = useState('');
 
-  useEffect(() => {
-    displayData();
-  }, []);
+  // useEffect(() => {
+  //   displayData();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      displayData();
+    }, []),
+  );
   const displayData = async (amount: any) => {
     try {
       const amount = await AsyncStorage.getItem('user');
       setPaymentData(amount);
-    } catch (error) {
-      // alert(error);
-    }
+    } catch (error) {}
   };
 
   const PrincipalInputHandler = (text: string) => {
@@ -130,6 +135,12 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   };
   const InterestChangeHandler = (text: string) => {
     setInterestRateText(text);
+  };
+  const validateInterestRate = (text: any) => {
+    return text.length > 0 && text.length < 50;
+  };
+  const validateTenure = (text: string) => {
+    return text.length > 0 && text.length < 50;
   };
   const TenureInputHandler = (text: string) => {
     setTenure(text.replace(/[^1-50]/g, ''));
@@ -169,6 +180,8 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   //   const n = parseFloat(tenure);
   //   const interestValue = p * rate * n;
   // }
+
+  const onAddChangeHandler = () => {};
   return (
     <Container>
       <StatusBar barStyle="light-content" />
@@ -199,7 +212,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 editable={true}
                 multiline={false}
                 keyboardType="numeric"
-                maxLength={10}
+                maxLength={2}
               />
 
               <DateContainer>
@@ -290,17 +303,18 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           {PaymentData && (
             <SubView>
               <PaymentView>
-                <PaymentType>Monthly Payment</PaymentType>
+                <PaymentType>{'Payment Type'}</PaymentType>
                 <Icon
                   name="delete"
                   size={30}
                   color={'white'}
                   style={{marginRight: 20}}
+                  onPress={() => {
+                    setPaymentData(false);
+                  }}
                 />
               </PaymentView>
-              <PaymentText>
-                {/* {PaymentData + '  from' + moment(selectedDate).format('MMM/YYYY')} */}
-              </PaymentText>
+              <PaymentText>{PaymentData}</PaymentText>
             </SubView>
           )}
         </Subcontainer>
@@ -310,20 +324,25 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           text="CALCULATE"
           backArrow
           onPress={() => {
-            if (
-              principalText &&
-              interestRateText &&
-              tenure &&
-              selectedDate !== ''
-            ) {
+            if (principalText === '') {
+              Alert.alert('enter principal ');
+            } else if (interestRateText === '') {
+              Alert.alert('enter interest rate');
+            } else if (tenure === '') {
+              Alert.alert('enter tenure ');
+            } else if (selectedDate === '') {
+              Alert.alert('SelectedDate');
+            } else if (!validateInterestRate(interestRateText)) {
+              Alert.alert('Please enter interestRate 1 to 50 number');
+            } else if (!validateTenure(tenure)) {
+              Alert.alert('Please enter tenure 1 to 50 number');
+            } else {
               navigation.navigate('PaymentDetailScreen', {
                 principal: principalText,
                 interestRate: interestRateInput,
                 tenure: tenure,
                 emi: emi,
               });
-            } else {
-              Alert.alert('enter detail');
             }
           }}
         />

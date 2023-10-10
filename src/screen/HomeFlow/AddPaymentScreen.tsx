@@ -97,7 +97,6 @@ const AddPaymentScreen = ({
   const [tenurend, setTenurEnd] = useState(false);
   const [customdate, setCustomDate] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [paytillDate, setPaytillDate] = useState('');
   const [monthText, setMonthText] = useState('');
   const toggleModalCancel = () => {
     setModalVisible(false);
@@ -116,7 +115,11 @@ const AddPaymentScreen = ({
     setSelectedDate(date);
     hideDatePicker();
   };
-
+  let Data_List = {
+    amount: amountText,
+    month_Type: monthText,
+    selectedDate: moment(selectedDate).format('MMM/YYYY'),
+  };
   return (
     <Container>
       <StatusBar barStyle="dark-content" />
@@ -164,25 +167,27 @@ const AddPaymentScreen = ({
             </DatePicker>
             <TitleText>Paying term</TitleText>
             <RadioContainer>
-              <Pressable
-                onPress={() => {
-                  setTenurEnd(true);
-                  setCustomDate(false);
-                }}>
-                <MainContainer>
-                  <Fontisto
-                    name={
-                      tenurend === true
-                        ? 'radio-btn-active'
-                        : 'radio-btn-passive'
-                    }
-                    size={20}
-                    color={tenurend === true ? 'darkcyan' : '#5F7C9D'}
-                    style={{marginHorizontal: 8}}
-                  />
-                  <SubText>Tenure end</SubText>
-                </MainContainer>
-              </Pressable>
+              {monthText !== 'One Time Only' && (
+                <Pressable
+                  onPress={() => {
+                    setTenurEnd(true);
+                    setCustomDate(false);
+                  }}>
+                  <MainContainer>
+                    <Fontisto
+                      name={
+                        tenurend === true
+                          ? 'radio-btn-active'
+                          : 'radio-btn-passive'
+                      }
+                      size={20}
+                      color={tenurend === true ? 'darkcyan' : '#5F7C9D'}
+                      style={{marginHorizontal: 8}}
+                    />
+                    <SubText>Tenure end</SubText>
+                  </MainContainer>
+                </Pressable>
+              )}
               <Pressable
                 onPress={() => {
                   setCustomDate(true);
@@ -230,11 +235,7 @@ const AddPaymentScreen = ({
           <Button
             text="ADD"
             onPress={() => {
-              AsyncStorage.setItem(
-                'user',
-                amountText,
-                // moment(selectedDate).format('MMM/YYYY'),
-              );
+              AsyncStorage.setItem('user', JSON.stringify(Data_List));
 
               navigation.navigate('HomeScreen', {
                 amount: amountText,
@@ -248,7 +249,7 @@ const AddPaymentScreen = ({
         onPress={() => setModalVisible(true)}
         onCancel={toggleModalCancel}
         month={'Monthly'}
-        year={'yearly'}
+        year={'Yearly'}
         quaterly={'Quaterly'}
         oneTime="One Time Only"
         onMonthClickHandler={month => setMonthText(month)}
