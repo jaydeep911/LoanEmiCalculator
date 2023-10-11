@@ -10,6 +10,11 @@ import CalendarIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  calculateHomeLoanEMI,
+  calculateLoanReport,
+} from '../../helper/HelpUtilAI';
+
 import {useFocusEffect} from '@react-navigation/native';
 type HomeProps = {
   navigation: any;
@@ -181,6 +186,109 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   //   const interestValue = p * rate * n;
   // }
 
+  const calculation = () => {
+    // Example usage:
+    const loanAmount = 1000000; // 10 lakhs
+    const annualInterestRate = 8; // 8% per annum
+    const loanTenureMonths = 240; // 20 years loan tenure in months
+    const monthlyEMI = calculateHomeLoanEMI(
+      loanAmount,
+      annualInterestRate,
+      loanTenureMonths / 12,
+    );
+
+    const partPayments = [
+      {
+        amount: 50000,
+        startDate: '2023-01-01',
+        endDate: '2023-12-31',
+        interval: 'OneTime',
+      },
+      {
+        amount: 30000,
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        interval: 'Yearly',
+      },
+      {
+        amount: 20000,
+        startDate: '2023-02-01',
+        endDate: '2023-02-28',
+        interval: 'OneTime',
+      },
+    ];
+    const partPayments_monthly = [
+      {
+        amount: 1000,
+        startDate: '2023-01-01',
+        endDate: '2123-12-31',
+        interval: 'Monthly',
+      },
+    ];
+    const partPayments_yearly = [
+      {
+        amount: 1000,
+        startDate: '2023-01-01',
+        endDate: '2123-12-31',
+        interval: 'Yearly',
+      },
+    ];
+    const partPayments_Quarterly = [
+      {
+        amount: 1000,
+        startDate: '2023-01-01',
+        endDate: '2123-12-31',
+        interval: 'Quarterly',
+      },
+    ];
+
+    const loanStartDate = '2023-01-01'; // Start date of the loan
+
+    const {
+      amortizationSchedule,
+      loanEndDate,
+      calculatedPrinciple,
+      calculatedInterest,
+      calculatedPartPayment,
+    } = calculateLoanReport(
+      loanAmount,
+      annualInterestRate,
+      monthlyEMI,
+      loanTenureMonths,
+      partPayments_Quarterly,
+      loanStartDate,
+    );
+
+    // Display the full monthly report
+    console.log(
+      'Month\tPayment Date\tMonthly EMI\tPrincipal Payment\tInterest Payment\tRemaining Loan Amount\tPart Payment',
+    );
+
+    amortizationSchedule.forEach(entry => {
+      console.log(
+        `${entry.month}\t${
+          entry.paymentDate.toISOString().split('T')[0]
+        }\t₹${entry.monthlyEMI.toFixed(2)}\t\t₹${entry.principalPayment.toFixed(
+          2,
+        )}\t\t₹${entry.interestPayment.toFixed(
+          2,
+        )}\t₹${entry.remainingLoanAmount.toFixed(
+          2,
+        )}\t₹${entry.partPaymentOfMonth.toFixed(2)}
+        `,
+      );
+    });
+
+    console.log(`Loan End Date: ${loanEndDate.toISOString().split('T')[0]}`);
+    console.log(`calculatedPrinciple : ${calculatedPrinciple}`);
+    console.log(`calculatedInterest : ${calculatedInterest}`);
+    console.log(`calculatedPartPayment : ${calculatedPartPayment}`);
+    console.log(
+      `Total Payment : ${
+        calculatedPrinciple + calculatedInterest + calculatedPartPayment
+      }`,
+    );
+  };
   const onAddChangeHandler = () => {};
   return (
     <Container>
@@ -345,6 +453,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 emi: emi,
               });
             }
+            calculation();
           }}
         />
       </ButtonView>
