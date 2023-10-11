@@ -23,6 +23,7 @@ type AddPaymentProps = {
   navigation: any;
   modalVisible: any;
   onCancel: any;
+  paymentData: any;
 };
 const Container = styled.View({
   flex: 1,
@@ -86,11 +87,7 @@ const SubText = styled.Text({
   color: 'black',
   fontSize: 16,
 });
-const AddPaymentScreen = ({
-  navigation,
-  modalVisible,
-  onCancel,
-}: AddPaymentProps) => {
+const AddPaymentScreen = ({navigation, paymentData}: AddPaymentProps) => {
   const [amountText, setAmountText] = useState('');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
@@ -236,10 +233,7 @@ const AddPaymentScreen = ({
             text="ADD"
             onPress={() => {
               AsyncStorage.setItem('user', JSON.stringify(Data_List));
-
-              navigation.navigate('HomeScreen', {
-                amount: amountText,
-              });
+              navigation.navigate('HomeScreen');
             }}
           />
         </ButtonView>

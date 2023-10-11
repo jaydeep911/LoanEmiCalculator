@@ -310,6 +310,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                   color={'white'}
                   style={{marginRight: 20}}
                   onPress={() => {
+                    AsyncStorage.removeItem('user');
                     setPaymentData(false);
                   }}
                 />
