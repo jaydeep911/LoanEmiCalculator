@@ -1,10 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import CommonHeader from '../../component/Header/CommonHeader';
 import {styled} from 'styled-components';
 import Button from '../../component/constant/Button/Button';
 import PieChart from 'react-native-pie-chart';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {Card} from 'react-native-paper';
+import {calculateLoanReport} from '../../helper/HelpUtilAI';
 
 type PaymentProps = {
   navigation: any;
@@ -66,15 +75,48 @@ const TotalTextView = styled.View({
 
 const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
   const [principal] = useState(route.params.principal);
-  const [interestRate] = useState(route.params.interestRate.toFixed(0));
+  const [interestRate] = useState(route.params.interestRate);
+  const [loanTenureMonths] = useState(route.params.loanTenureMonths.toFixed(0));
+
   const [paymentMonth] = useState(route.params.paymentMonth);
-  const [emi] = useState(route.params.emi.toFixed(0));
+  const [loanStartDate] = useState(route.params.loanStartDate);
+
+  const [emi] = useState(route.params.emi);
 
   console.log('date', paymentMonth);
 
   const widthAndHeight = 170;
-  const series = [principal ? principal : 0, interestRate ? interestRate : 0];
+  const [intrustAmount, setIntrustAmount] = useState(0);
+
+  const series = [principal ? principal : 0, intrustAmount ? intrustAmount : 0];
   const sliceColor = ['green', 'orange'];
+
+  useEffect(() => {
+    const {
+      amortizationSchedule,
+      loanEndDate,
+      calculatedPrinciple,
+      calculatedInterest,
+      calculatedPartPayment,
+
+      // calculatedInterest 4429890.5756220035
+      // LOG  calculatedPrinciple 2999819.7026332878
+    } = calculateLoanReport(
+      principal,
+      interestRate,
+      emi,
+      loanTenureMonths,
+      [],
+      loanStartDate,
+    );
+    setIntrustAmount(calculatedInterest);
+
+    // console.log('amortizationSchedule ' + amortizationSchedule);
+    console.log('loanEndDate ' + loanEndDate);
+    console.log('calculatedInterest ' + calculatedInterest);
+    console.log('calculatedPrinciple ' + calculatedPrinciple);
+    console.log('calculatedPartPayment ' + calculatedPartPayment);
+  }, [route.params]);
 
   return (
     <Container>
@@ -82,79 +124,96 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
         // backgroundColor="#FB4B00"
         barStyle={Platform.OS === 'ios' ? 'light-content' : 'dark-content'}
       />
-
       <CommonHeader
-        text={'Emi : ' + emi}
+        text={'Emi : ' + parseInt(emi)}
         backArrow
         onPress={() => {
           navigation.goBack();
         }}
       />
-      <Subcontainer>
-        <PieChart
-          widthAndHeight={widthAndHeight}
-          series={series}
-          sliceColor={sliceColor}
-          coverRadius={0.7}
-          style={{alignSelf: 'center'}}
-        />
-        <CardView>
-          <TextView>
-            <SubText>
-              <FontAwesomeIcon
-                name="square"
-                size={13}
-                color={'green'}
-                style={{alignSelf: 'center'}}
+      <ScrollView style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <Card style={{margin: 5, padding: 20, flex: 1}}>
+              <Text>Principal : {principal}</Text>
+            </Card>
+          </View>
+
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <Card style={{margin: 5, padding: 20, flex: 1}}>
+              <Text>Intrust Rate : {interestRate}</Text>
+            </Card>
+            <Card style={{margin: 5, padding: 20, flex: 1}}>
+              <Text>Tenure Months : {loanTenureMonths} </Text>
+            </Card>
+          </View>
+          <Subcontainer>
+            <PieChart
+              widthAndHeight={widthAndHeight}
+              series={series}
+              sliceColor={sliceColor}
+              coverRadius={0.7}
+              style={{alignSelf: 'center'}}
+            />
+            <CardView>
+              <TextView>
+                <SubText>
+                  <FontAwesomeIcon
+                    name="square"
+                    size={13}
+                    color={'green'}
+                    style={{alignSelf: 'center'}}
+                  />
+                  <TitleText>Principle </TitleText>
+                </SubText>
+                <TitleText>{principal ? principal : 0.0}</TitleText>
+              </TextView>
+              <TextView>
+                <SubText>
+                  <FontAwesomeIcon
+                    name="square"
+                    size={13}
+                    color={'orange'}
+                    style={{alignSelf: 'center'}}
+                  />
+                  <TitleText>Interest </TitleText>
+                </SubText>
+                <TitleText>
+                  {intrustAmount ? parseInt(intrustAmount) : 0}
+                </TitleText>
+              </TextView>
+              <TextView>
+                <SubText>
+                  <FontAwesomeIcon
+                    name="square"
+                    size={13}
+                    color={'blue'}
+                    style={{alignSelf: 'center'}}
+                  />
+                  <TitleText>Part Payment</TitleText>
+                </SubText>
+                <TitleText>0</TitleText>
+              </TextView>
+              <UnderLineView />
+              <TotalTextView>
+                <TitleText>Total Payment </TitleText>
+                <TitleText>
+                  {parseInt(principal) + parseInt(intrustAmount)}
+                </TitleText>
+              </TotalTextView>
+            </CardView>
+            <ButtonView>
+              <Button
+                text="LONE DETAILS"
+                backArrow
+                onPress={() => {
+                  navigation.navigate('PaymentListScreen');
+                }}
               />
-              <TitleText>Principle </TitleText>
-            </SubText>
-            <TitleText>{principal ? principal : 0.0}</TitleText>
-          </TextView>
-          <TextView>
-            <SubText>
-              <FontAwesomeIcon
-                name="square"
-                size={13}
-                color={'orange'}
-                style={{alignSelf: 'center'}}
-              />
-              <TitleText>Interest </TitleText>
-            </SubText>
-            <TitleText>{interestRate ? interestRate : 0.0}</TitleText>
-          </TextView>
-          <TextView>
-            <SubText>
-              <FontAwesomeIcon
-                name="square"
-                size={13}
-                color={'blue'}
-                style={{alignSelf: 'center'}}
-              />
-              <TitleText>Part Payment</TitleText>
-            </SubText>
-            <TitleText>0</TitleText>
-          </TextView>
-          <UnderLineView />
-          <TotalTextView>
-            <TitleText>Total Payment </TitleText>
-            <TitleText>
-              {principal && interestRate
-                ? parseFloat(principal) + parseFloat(interestRate)
-                : 0}
-            </TitleText>
-          </TotalTextView>
-        </CardView>
-        <ButtonView>
-          <Button
-            text="LONE DETAILS"
-            backArrow
-            onPress={() => {
-              navigation.navigate('PaymentListScreen');
-            }}
-          />
-        </ButtonView>
-      </Subcontainer>
+            </ButtonView>
+          </Subcontainer>
+        </View>
+      </ScrollView>
     </Container>
   );
 };

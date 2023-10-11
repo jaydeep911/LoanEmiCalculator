@@ -16,6 +16,7 @@ import {
 } from '../../helper/HelpUtilAI';
 
 import {useFocusEffect} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 type HomeProps = {
   navigation: any;
   route: any;
@@ -114,7 +115,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [interestRateText, setInterestRateText] = useState('');
   const [tenure, setTenure] = useState('');
   const [isDatePickerVisible, setDatePickerVisibility] = useState();
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [month, setMonth] = useState(false);
   const [year, setYear] = useState(true);
   const [PaymentData, setPaymentData] = useState([]);
@@ -137,6 +138,12 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
 
   const PrincipalInputHandler = (text: string) => {
     setPrincipalText(text);
+    // setPrincipalText(
+    //   new Intl.NumberFormat('en-IN', {
+    //     style: 'currency',
+    //     currency: 'INR',
+    //   }).format(parseInt(text)),
+    // );
   };
   const InterestChangeHandler = (text: string) => {
     setInterestRateText(text);
@@ -148,7 +155,8 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     return text.length > 0 && text.length < 50;
   };
   const TenureInputHandler = (text: string) => {
-    setTenure(text.replace(/[^1-50]/g, ''));
+    // setTenure(text.replace(/[^1-50]/g, ''));
+    setTenure(text);
   };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -319,8 +327,8 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 value={interestRateText}
                 editable={true}
                 multiline={false}
-                keyboardType="numeric"
-                maxLength={2}
+                keyboardType="decimal-pad"
+                maxLength={5}
               />
 
               <DateContainer>
@@ -403,7 +411,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                   editable={true}
                   multiline={false}
                   keyboardType="numeric"
-                  maxLength={2}
+                  maxLength={3}
                 />
               )}
             </CardText>
@@ -433,11 +441,29 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
           backArrow
           onPress={() => {
             if (principalText === '') {
-              Alert.alert('enter principal ');
+              // Alert.alert('enter principal ');
+              Toast.show({
+                type: 'error',
+                // success, error, info
+                text1: 'Required',
+                text2: 'Enter Loan Principal amount 👋',
+              });
             } else if (interestRateText === '') {
-              Alert.alert('enter interest rate');
+              // Alert.alert('enter interest rate');
+              Toast.show({
+                type: 'error',
+                // success, error, info
+                text1: 'Required',
+                text2: 'Enter Loan Interest Rate %',
+              });
             } else if (tenure === '') {
-              Alert.alert('enter tenure ');
+              // Alert.alert('enter tenure ');
+              Toast.show({
+                type: 'error',
+                // success, error, info
+                text1: 'Required',
+                text2: 'Enter tenure',
+              });
             } else if (selectedDate === '') {
               Alert.alert('SelectedDate');
             } else if (!validateInterestRate(interestRateText)) {
@@ -445,12 +471,45 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
             } else if (!validateTenure(tenure)) {
               Alert.alert('Please enter tenure 1 to 50 number');
             } else {
+              const loanAmount = parseInt(principalText); // 10 lakhs
+              const annualInterestRate = parseFloat(interestRateText); // 8% per annum
+              let loanTenureMonths = parseInt(tenure);
+              if (year) {
+                loanTenureMonths = parseInt(tenure) * 12;
+              }
+
+              // 20 years loan tenure in months
+              const monthlyEMI = calculateHomeLoanEMI(
+                loanAmount,
+                annualInterestRate,
+                loanTenureMonths / 12,
+              );
+
+              // navigation.navigate('PaymentDetailScreen', {
+              //   principal: principalText,
+              //   interestRate: interestRateInput,
+              //   tenure: tenure,
+              //   emi: monthlyEMI,
+              // });
               navigation.navigate('PaymentDetailScreen', {
                 principal: principalText,
-                interestRate: interestRateInput,
-                tenure: tenure,
-                emi: emi,
+                interestRate: annualInterestRate,
+                loanTenureMonths: loanTenureMonths,
+                emi: monthlyEMI,
+                loanStartDate: selectedDate,
               });
+
+              // Alert.alert(
+              //   'hello',
+              //   'principal :' +
+              //     principalText +
+              //     '\nRate :' +
+              //     annualInterestRate +
+              //     '\nMonth :' +
+              //     loanTenureMonths +
+              //     '\nEMI:' +
+              //     monthlyEMI,
+              // );
             }
             calculation();
           }}

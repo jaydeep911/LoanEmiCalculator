@@ -24,7 +24,7 @@ const App = () => {
 
     <NavigationContainer>
       <RootNavigator />
-      {/* <Toast /> */}
+      <Toast />
     </NavigationContainer>
 
     //   </PersistGate>
