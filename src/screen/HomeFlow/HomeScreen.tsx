@@ -112,7 +112,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [month, setMonth] = useState(false);
   const [year, setYear] = useState(true);
-  const [PaymentData, setPaymentData] = useState([]);
+  const [PaymentData, setPaymentData] = useState('');
 
   // useEffect(() => {
   //   displayData();
