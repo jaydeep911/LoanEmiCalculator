@@ -1,10 +1,12 @@
-import React from 'react';
-import {View, Text, StatusBar, FlatList} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StatusBar, FlatList, ScrollView} from 'react-native';
 import {styled} from 'styled-components';
 import CommonHeader from '../../component/Header/CommonHeader';
+import moment from 'moment';
+
 type DataListProps = {
   navigation: any;
-  modalVisible: any;
+  route: any;
   onCancel: any;
 };
 const Container = styled.View({
@@ -12,9 +14,11 @@ const Container = styled.View({
 });
 const Subcontainer = styled.View({
   flex: 1,
-  // padding: 10,
 });
-const PaymentListScreen = ({navigation}: DataListProps) => {
+const PaymentListScreen = ({navigation, route}: DataListProps) => {
+  const [amortizationData] = useState(route.params.amortizationData);
+  console.log('amortizationData====>', amortizationData);
+
   const Data = [
     {
       title: 'year',
@@ -53,9 +57,38 @@ const PaymentListScreen = ({navigation}: DataListProps) => {
         }}
       />
       <Subcontainer>
-        {/* <Text>hello</Text> */}
-        <FlatList
-          data={Data}
+        <ScrollView>
+          <View>
+            {amortizationData.map((item: any) => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginHorizontal: 20,
+                  justifyContent: 'space-between',
+                  marginTop: 10,
+                }}>
+                {/* <Text style={{paddingBottom: 10, color: 'black'}}>number</Text> */}
+                <Text style={{paddingBottom: 10, color: 'black'}}>
+                  {item.month}
+                </Text>
+                <Text style={{paddingBottom: 10, color: 'black'}}>
+                  {moment(item.paymentDate).format('YYYY')}
+                </Text>
+                <Text style={{paddingBottom: 10, color: 'black'}}>
+                  {item.monthlyEMI.toFixed(2)}
+                </Text>
+                <Text style={{paddingBottom: 10, color: 'black'}}>
+                  {item.principalPayment.toFixed(2)}
+                </Text>
+                <Text style={{paddingBottom: 10, color: 'black'}}>
+                  {item.interestPayment.toFixed(2)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        {/* <FlatList
+          data={amortizationData}
           horizontal={true}
           // contentContainerStyle={{flexDirection: 'row'}}
           renderItem={({item}) => (
@@ -79,17 +112,17 @@ const PaymentListScreen = ({navigation}: DataListProps) => {
                     marginTop: 10,
                   }}>
                   <Text style={{paddingBottom: 10, color: 'black'}}>
-                    {item.year}
+                    {item.principalPayment.toFixed(1)}
                   </Text>
                   <Text style={{paddingBottom: 10, color: 'black'}}>
-                    {item.amount}
+                    {item.interestPayment.toFixed(1)}
                   </Text>
                 </View>
               </View>
             </View>
           )}
           keyExtractor={item => item.id}
-        />
+        /> */}
       </Subcontainer>
     </Container>
   );

@@ -59,7 +59,6 @@ const TitleText = styled.Text({
   color: '#5F7C9D',
   marginTop: 12,
 });
-
 const DatePicker = styled.TouchableOpacity({
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -120,10 +119,6 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [year, setYear] = useState(true);
   const [PaymentData, setPaymentData] = useState('');
 
-  // useEffect(() => {
-  //   displayData();
-  // }, []);
-
   useFocusEffect(
     React.useCallback(() => {
       displayData();
@@ -155,7 +150,6 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     return text.length > 0 && text.length < 50;
   };
   const TenureInputHandler = (text: string) => {
-    // setTenure(text.replace(/[^1-50]/g, ''));
     setTenure(text);
   };
   const showDatePicker = () => {

@@ -90,7 +90,7 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
 
   const series = [principal ? principal : 0, intrustAmount ? intrustAmount : 0];
   const sliceColor = ['green', 'orange'];
-
+  const [amortization, setAmortization] = useState([]);
   useEffect(() => {
     const {
       amortizationSchedule,
@@ -111,7 +111,8 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
     );
     setIntrustAmount(calculatedInterest);
 
-    // console.log('amortizationSchedule ' + amortizationSchedule);
+    // console.log('amortizationSchedule ' + JSON.stringify(amortizationSchedule));
+    setAmortization(amortizationSchedule);
     console.log('loanEndDate ' + loanEndDate);
     console.log('calculatedInterest ' + calculatedInterest);
     console.log('calculatedPrinciple ' + calculatedPrinciple);
@@ -207,7 +208,9 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
                 text="LONE DETAILS"
                 backArrow
                 onPress={() => {
-                  navigation.navigate('PaymentListScreen');
+                  navigation.navigate('PaymentListScreen', {
+                    amortizationData: amortization,
+                  });
                 }}
               />
             </ButtonView>
