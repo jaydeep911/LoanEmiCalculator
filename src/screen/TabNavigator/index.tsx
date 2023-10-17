@@ -6,6 +6,7 @@ import HomeStack from '../HomeFlow';
 import ServiceStack from '../ServiceFlow';
 import ProfileStack from '../ProfileFlow';
 import Colors from '../../component/constant/Colors';
+import {Platform} from 'react-native';
 
 const TabStack = () => {
   const Tab = createBottomTabNavigator();
@@ -27,7 +28,11 @@ const TabStack = () => {
 
           //new added for android
           tabBarLabelStyle: {},
-          tabBarStyle: {minHeight: 60, paddingBottom: 5},
+          tabBarStyle: {
+            minHeight: 60,
+            marginBottom: Platform.OS === 'android' ? 5 : 0,
+            // paddingBottom: Platform.OS === 'android' ? 5 : 0,
+          },
           //end
           tabBarIcon: tabInfo => (
             <Icons name="home" size={25} color={tabInfo.color} />
@@ -42,7 +47,6 @@ const TabStack = () => {
           headerShown: false,
           tabBarStyle: {minHeight: 60, paddingBottom: 5},
           tabBarLabelStyle: {},
-
           tabBarShowLabel: true,
           tabBarIcon: tabInfo => (
             <Icons name="cog" size={25} color={tabInfo.color} />
