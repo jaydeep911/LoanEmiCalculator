@@ -181,13 +181,6 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
     (parseFloat(principalText) * (parseFloat(interestRateText) * 0.6)) / 12;
   const interestRateInput = parseFloat(principalText) / 12 + interest;
 
-  // if () {
-  //   const rate = parseFloat(interestRateText) / 12 / 180;
-  //   const p = parseFloat(principalText);
-  //   const n = parseFloat(tenure);
-  //   const interestValue = p * rate * n;
-  // }
-
   const calculation = () => {
     // Example usage:
     const loanAmount = 1000000; // 10 lakhs
