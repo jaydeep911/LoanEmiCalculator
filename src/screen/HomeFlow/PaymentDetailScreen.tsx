@@ -82,8 +82,8 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
   const [loanStartDate] = useState(route.params.loanStartDate);
 
   const [emi] = useState(route.params.emi);
-  const [partPayment] = useState(route.params.partPayment);
-  console.log('partPayment======>', partPayment);
+  // const [partPayment] = useState(route.params.partPayment);
+  // console.log('partPayment======>', partPayment);
   console.log('date', paymentMonth);
 
   const widthAndHeight = 170;
@@ -194,7 +194,7 @@ const PaymentDetailScreen = ({navigation, route}: PaymentProps) => {
                   />
                   <TitleText>Part Payment</TitleText>
                 </SubText>
-                <TitleText>{partPayment}</TitleText>
+                <TitleText>0</TitleText>
               </TextView>
               <UnderLineView />
               <TotalTextView>

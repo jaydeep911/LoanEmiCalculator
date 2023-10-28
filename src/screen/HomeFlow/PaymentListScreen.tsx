@@ -132,7 +132,7 @@ const PaymentListScreen = ({navigation, route}: DataListProps) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  setIsVisible(true);
+                  setIsVisible(!isVisible);
                 }}>
                 <View
                   style={{
@@ -176,7 +176,7 @@ const PaymentListScreen = ({navigation, route}: DataListProps) => {
                         style={{
                           paddingBottom: 10,
                           color: 'black',
-                          marginLeft: 50,
+                          marginLeft: 55,
                         }}>
                         1
                       </Text>

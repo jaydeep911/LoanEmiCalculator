@@ -17,7 +17,6 @@ const TabStack = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: Colors.tabActive,
         tabBarInactiveTintColor: Colors.tabInActive,
-        // tabBarLabelStyle: {marginBottom: 10},
       }}>
       <Tab.Screen
         name="Home"
@@ -29,9 +28,7 @@ const TabStack = () => {
           //new added for android
           tabBarLabelStyle: {},
           tabBarStyle: {
-            // minHeight: 60,
             marginBottom: Platform.OS === 'android' ? 10 : 0,
-            // paddingBottom: Platform.OS === 'android' ? 5 : 0,
           },
           //end
           tabBarIcon: tabInfo => (
@@ -45,7 +42,7 @@ const TabStack = () => {
         component={ServiceStack}
         options={{
           headerShown: false,
-          tabBarStyle: {minHeight: 60, paddingBottom: 5},
+          tabBarStyle: {marginBottom: Platform.OS === 'android' ? 10 : 0},
           tabBarLabelStyle: {},
           tabBarShowLabel: true,
           tabBarIcon: tabInfo => (
@@ -60,7 +57,7 @@ const TabStack = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: true,
-          tabBarStyle: {minHeight: 60, paddingBottom: 5},
+          tabBarStyle: {paddingBottom: 5},
           tabBarLabelStyle: {},
 
           tabBarIcon: tabInfo => (

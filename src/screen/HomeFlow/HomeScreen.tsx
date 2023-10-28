@@ -485,7 +485,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 loanTenureMonths: loanTenureMonths,
                 emi: monthlyEMI,
                 loanStartDate: selectedDate,
-                partPayment: PaymentData.amount,
+                // partPayment: PaymentData.amount,
               });
 
               // Alert.alert(
