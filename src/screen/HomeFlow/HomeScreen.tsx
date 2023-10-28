@@ -117,8 +117,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [month, setMonth] = useState(false);
   const [year, setYear] = useState(true);
-  const [PaymentData, setPaymentData] = useState('');
-
+  const [PaymentData, setPaymentData] = useState([]);
   useFocusEffect(
     React.useCallback(() => {
       displayData();
@@ -126,8 +125,9 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
   );
   const displayData = async (amount: any) => {
     try {
-      const amount = await AsyncStorage.getItem('user');
-      setPaymentData(amount);
+      const data = await AsyncStorage.getItem('user');
+      setPaymentData(data);
+      console.log('amount====>', data);
     } catch (error) {}
   };
 
@@ -485,6 +485,7 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
                 loanTenureMonths: loanTenureMonths,
                 emi: monthlyEMI,
                 loanStartDate: selectedDate,
+                partPayment: PaymentData.amount,
               });
 
               // Alert.alert(
