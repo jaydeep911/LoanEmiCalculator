@@ -17,7 +17,7 @@ const TabStack = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: Colors.tabActive,
         tabBarInactiveTintColor: Colors.tabInActive,
-        tabBarLabelStyle: {marginBottom: 10},
+        // tabBarLabelStyle: {marginBottom: 10},
       }}>
       <Tab.Screen
         name="Home"
@@ -29,8 +29,8 @@ const TabStack = () => {
           //new added for android
           tabBarLabelStyle: {},
           tabBarStyle: {
-            minHeight: 60,
-            marginBottom: Platform.OS === 'android' ? 5 : 0,
+            // minHeight: 60,
+            marginBottom: Platform.OS === 'android' ? 10 : 0,
             // paddingBottom: Platform.OS === 'android' ? 5 : 0,
           },
           //end
